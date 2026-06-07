@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include  <stdbool.h>
+#include <string.h>
+#include <windows.h>
 
 typedef struct Node {
     int data;
@@ -12,6 +15,7 @@ Node* Create_Node(int data) {
     n->data = data;
     n->left = NULL;
     n->right = NULL;
+    return n;
 }
 
 typedef struct {
@@ -30,7 +34,7 @@ void Insert_Recursive(Node** current_node, int data) {
                 return;
             }
             else {
-                Insert_Recursive(&(*current_node)->data, data);
+                Insert_Recursive(&(*current_node)->left, data);
             }
         }
         
@@ -47,7 +51,41 @@ void Insert_Recursive(Node** current_node, int data) {
 }
 
 void Insert(Tree* t, int data) {
-    if(t->root == NULL) return;
     Insert_Recursive(&(t->root), data);
 }
 
+int Count_Height(Node* current_node, int count) {
+    if(current_node->left == NULL && current_node->right == NULL) {
+        return count;
+    }
+    else if(current_node->left != NULL && current_node->right == NULL) {
+        Count_Height(current_node->left, count + 1);
+    }
+    else if(current_node->left == NULL && current_node->right != NULL) {
+        Count_Height(current_node->right, count + 1);
+    }
+    else if(current_node->left != NULL && current_node->right != NULL) {
+        Count_Height(current_node->left, count + 1);
+    }
+}
+
+bool Is_Balance(Tree* t) {
+    int count_left = Count_Height(t->root->left, 0);
+    int count_right = Count_Height(t->root->right, 0);
+
+    return ((count_left - count_right) > 1) ? 1 : 0;
+}
+
+int main() {
+    SetConsoleOutputCP(CP_UTF8);
+    Tree t;
+    t.root = NULL;
+    int a[] = {32, 51, 27, 83, 96, 11, 45, 75, 66};
+    for(int i = 0; i < 9; i++){
+        Insert(&t, a[i]);
+    }
+
+    int check = Is_Balance(&t);
+    printf("%d", check);
+    return 0;
+}
