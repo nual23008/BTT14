@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include  <stdbool.h>
+#include <stdbool.h>
 #include <string.h>
 #include <windows.h>
 
@@ -54,26 +54,20 @@ void Insert(Tree* t, int data) {
     Insert_Recursive(&(t->root), data);
 }
 
-int Count_Height(Node* current_node, int count) {
-    if(current_node->left == NULL && current_node->right == NULL) {
-        return count;
-    }
-    else if(current_node->left != NULL && current_node->right == NULL) {
-        Count_Height(current_node->left, count + 1);
-    }
-    else if(current_node->left == NULL && current_node->right != NULL) {
-        Count_Height(current_node->right, count + 1);
-    }
-    else if(current_node->left != NULL && current_node->right != NULL) {
-        Count_Height(current_node->left, count + 1);
-    }
+int Get_Height(Node* current_node) {
+    if(current_node == NULL) return 0;
+
+    int left_height = Get_Height(current_node->left);
+    int right_height = Get_Height(current_node->right);
+
+    return 1 + ((left_height > right_height) ? left_height : right_height);
 }
 
-bool Is_Balance(Tree* t) {
-    int count_left = Count_Height(t->root->left, 0);
-    int count_right = Count_Height(t->root->right, 0);
+int Caculate_Balance_Factor(Tree* t) {
+    int count_left = Get_Height(t->root->left);
+    int count_right = Get_Height(t->root->right);
 
-    return ((count_left - count_right) > 1) ? 1 : 0;
+    return (count_left - count_right);
 }
 
 int main() {
@@ -85,7 +79,7 @@ int main() {
         Insert(&t, a[i]);
     }
 
-    int check = Is_Balance(&t);
+    int check = Caculate_Balance_Factor(&t);
     printf("%d", check);
     return 0;
 }
