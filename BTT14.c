@@ -70,6 +70,26 @@ int Caculate_Balance_Factor(Tree* t) {
     return (count_left - count_right);
 }
 
+Node* Right_Rotate(Node* y) {
+    Node* x = y->left;
+    Node* n = x->right;
+
+    x->right = y;
+    y->left = n;
+
+    return x;
+}
+
+Node* Left_Rotate(Node* y) {
+    Node* x = y->right;
+    Node* n = x->left;
+
+    x->left = y;
+    y->right = n;
+
+    return x;
+}
+
 int main() {
     SetConsoleOutputCP(CP_UTF8);
     Tree t;
