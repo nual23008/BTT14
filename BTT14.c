@@ -133,7 +133,13 @@ int main() {
     }
 
     int check = Calculate_Balance_Factor(t.root);
-    printf("%d", check);
-    
+    printf("He so can bang truoc khi xoay: %d \n", check);
+
+    Tree new_t;
+    new_t.root = Balance_Tree(&(t.root));
+
+    int check_after = Calculate_Balance_Factor(new_t.root);
+    printf("He so can bang sau khi xoay: %d", check_after);
+
     return 0;
 }
