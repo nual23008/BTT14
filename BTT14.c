@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <windows.h>
+#include <math.h>
 
 typedef struct Node {
     int data;
@@ -63,9 +64,9 @@ int Get_Height(Node* current_node) {
     return 1 + ((left_height > right_height) ? left_height : right_height);
 }
 
-int Caculate_Balance_Factor(Tree* t) {
-    int count_left = Get_Height(t->root->left);
-    int count_right = Get_Height(t->root->right);
+int Calculate_Balance_Factor(Node* t) {
+    int count_left = Get_Height(t->left);
+    int count_right = Get_Height(t->right);
 
     return (count_left - count_right);
 }
@@ -90,6 +91,38 @@ Node* Left_Rotate(Node* y) {
     return x;
 }
 
+Node* Balance_Tree(Node** current_node) {
+    int balance = Calculate_Balance_Factor(*current_node);
+
+    if(abs(balance) <= 1) {
+        return (*current_node);
+    }
+    else if(balance < -1) {
+        int right_balance = Calculate_Balance_Factor((*current_node)->right);
+
+        if(right_balance <= 0) {
+            return Left_Rotate((*current_node));
+        }
+        else {
+            (*current_node)->right = Right_Rotate((*current_node)->right);
+            return Left_Rotate((*current_node));
+            }
+    }
+    else if(balance > 1) {
+        int left_balance = Calculate_Balance_Factor((*current_node)->left);
+
+        if(left_balance > 0) {
+            return Right_Rotate((*current_node));
+        }
+        else {
+            (*current_node)->left = Left_Rotate((*current_node)->left);
+            return Right_Rotate((*current_node));
+        }
+    }
+
+    return (*current_node);
+}
+
 int main() {
     SetConsoleOutputCP(CP_UTF8);
     Tree t;
@@ -99,7 +132,8 @@ int main() {
         Insert(&t, a[i]);
     }
 
-    int check = Caculate_Balance_Factor(&t);
+    int check = Calculate_Balance_Factor(t.root);
     printf("%d", check);
+    
     return 0;
 }
